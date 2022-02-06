@@ -1,4 +1,4 @@
-from Game_Options import building_choice, check_adjacent, place_building, prevent_overlap, View_highscore, Verify_Modify_highscore
+from Game_Options import *
 from Menu import *
 from Board import *
 import pytest
@@ -64,8 +64,23 @@ def test_built():
 
 def test_modify_highscore():
     board=Board()
-    checkboard=board.Load_Board()
+    checkboard=board.New_Board()
+    building_choice(board,"A1","MON")
+    building_choice(board,"B1","PRK")
+    building_choice(board,"C1","MON")
+    building_choice(board,"D1","MON")
+    building_choice(board,"A2","PRK")
+    building_choice(board,"B2","PRK")
+    building_choice(board,"C2","PRK")
+    building_choice(board,"D2","PRK")
+    building_choice(board,"A3","HWY")
+    building_choice(board,"B3","HWY")
+    building_choice(board,"C3","HWY")
+    building_choice(board,"D3","HWY")
+    building_choice(board,"A4","MON")
+    building_choice(board,"B4","MON")
     building_choice(board,"C4","MON")
+    building_choice(board,"D4","MON")
     with mock.patch('builtins.input', return_value="Testname"):
         assert Verify_Modify_highscore(board) == "Modified highscore"
 
