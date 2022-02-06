@@ -17,6 +17,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest pytest-cov
+        pip install pytest-mock
         pip install openpyxl
     - name: Checkout Own Repo to cloud
       uses: actions/checkout@v2
@@ -26,7 +27,7 @@ jobs:
     - name: Checkout private repo remotely
       uses: actions/checkout@v2
       with:
-        repository: teyzx123/Private_SimpCity
+        repository: Keithpek/SimpCityPrivate
         path: tests
         token: ${{ secrets.QA_DEVOPS }}
     - name: Linter Check with Flake8
