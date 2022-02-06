@@ -91,13 +91,6 @@ def test_no_highscore():
     result = Verify_Modify_highscore(board)
     assert result=="No highscore"
 
-def test_exceed_name():
-    board=Board()
-    checkboard=board.Load_Board()
-    building_choice(board,"C4","PRK")
-    with mock.patch('builtins.input', return_value="Thisismorethantwentycharacters"):
-        assert Verify_Modify_highscore(board) == "Username exceed"
-
 def test_view_highscore():
     result=View_highscore()
     assert result==True
