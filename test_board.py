@@ -1,29 +1,23 @@
 from unittest import mock
+
+import pytest
 from Board import *
 from Menu import *
 import builtins
-
-def test_option_building():
-    board = Board()
-    # change as it will take in int instead of string
-    for i in range (1, 8):
-        with mock.patch.object(builtins, "input", lambda _: i):
-            assert Option_Building(board) == i
-
-    with mock.patch.object(builtins, "input", lambda _: "abc"):
-        assert Option_Building(board) == "Wrong Input"
-
-    with mock.patch.object(builtins, "input", lambda _: 0):
-        assert Option_Building(board) == 0
-
-    with mock.patch.object(builtins, "input", lambda _: 16):
-        assert Option_Building(board) == "Out of Range"
 
 def test_increase_turn():
     board = Board()
     result = board.turn + 1
     assert result == board.Next_Turn()
-
+'''
+    value > output
+    PASSING UNIT TEST
+    == Range from 0 to data size ==
+        o buildingState 1 > data item 1
+        0 buildingState 2 > data item 2
+        o ...
+        o buildingState n > data item n
+'''
 def test_get_buildingState():
     board = Board()
 
@@ -40,20 +34,58 @@ def test_get_buildingState():
         assert board.Get_BuildingState()[i] == sv_data[i]
 
 
-def test_change_buildingState():
+'''
+    value > output
+    FAILING UNIT TEST
+        o -2 > "Out of Range"
+        o 0 > "Exitting"
+        o 8 > "Out of Range"
+
+    value > output [true result]
+    SKIP UNIT TEST
+        o 1 > "Out of Range"    [1 > 1]
+        o 8 > 8                 [8 > "Out of Range"]
+'''
+@pytest.mark.parametrize("value, output", 
+                        [
+                            (-2, "Out of Range"), 
+                            (0, "Exitting"), 
+                            (8, "Out of Range"), 
+                            pytest.param(1, "Out of Range", marks=pytest.mark.xfail), 
+                            pytest.param(1, "Exitting", marks=pytest.mark.xfail)
+                            ])
+def test_change_buildingState_failing(value, output):
     board = Board()
 
-    if board.BuildingState[0] == "False":
-        assert board.Change_BuildingState(1) == "True"
-    elif board.BuildingState[0] == "True":
-        assert board.Change_BuildingState(1) == "False"
-
     # -1 and below is out of range
-    assert board.Change_BuildingState(-2) == "Out of Range"
-
     # 0 would return to main menu
-    assert board.Change_BuildingState(0) == "Exitting"
-
     # 7 and above is out of range
-    assert board.Change_BuildingState(7) == "Out of Range"
+    assert board.Change_BuildingState(value) == output
 
+'''
+    value > output : output2
+    PASSING UNIT TEST
+        o 0 > "True" : "False"
+        o 1 > "True" : "False"
+        o ...
+        o 7 > "True" : "False"
+'''
+@pytest.mark.parametrize("value, output, output2", 
+                            [
+                                (1, "True", "False"), 
+                                (2, "True", "False"), 
+                                (3, "True", "False"),
+                                (4, "True", "False"),
+                                (5, "True", "False"),
+                                (6, "True", "False"),
+                                (7, "True", "False")
+                            ])
+def test_change_buildingState_passing(value, output, output2):
+    board = Board()
+    # when called board.Change_BuildingSate(output) it will become the opposite of what it is
+    # "true" becomes "false"
+    # "false" becomes "true"
+    # testing is done to see if changing it once will turn it to True then calling the function again would turn it to False
+    assert board.Change_BuildingState(value) == output
+
+    assert board.Change_BuildingState(value) == output2
